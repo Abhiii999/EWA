@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { categories, userTypes } from "../../constants";
@@ -22,6 +22,8 @@ const WelcomePage = () => {
   const requiredProducts = products?.filter(
     (item) => item.category.toString() === categoryId
   );
+  
+  console.log('orders_list:', orders);
 
   const handleCancelOrder = (orderId) => {
     dispatch(cancelOrder(orderId));

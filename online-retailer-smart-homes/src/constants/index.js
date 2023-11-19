@@ -29,7 +29,6 @@ import a3 from "../assets/accessories/a3.jpeg";
 import a4 from "../assets/accessories/a4.jpg";
 
 
-
 const items = [
   {
     id: "db1",

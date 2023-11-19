@@ -45,7 +45,51 @@ db.connect((err) => {
 //     res.json(results);
 //   });
 // });
+//print user orders only
 
+//print all orders
+app.get('/Orders', (req, res) => {
+  
+  const query = 'SELECT * FROM customerorders';
+
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error executing MySQL query:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+    console.log(results);
+    if(results.length>0){
+      res.json({ msg: 'Orders found', user: results });
+    }
+  });
+});
+//print all orders
+
+//check user orders
+app.post('/userOrder', (req, res) => {
+  const requestData = req.body;
+  console.log("body",req.body);
+  const {username} = req.body;
+  const query = 'SELECT * FROM customerorders WHERE username = ?';
+
+  db.query(query, [username], (error, results) => {
+    if (error) {
+      console.error('Error executing MySQL query:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+    console.log(results);
+    if(results.length>0){
+      res.json({ msg: 'User order found', user: results[0] });
+    }else{
+      res.json({ msg: 'User order not found' });
+    }
+  });
+});
+//print user orders only
+
+//check login crestentials
 app.post('/login', (req, res) => {
   const requestData = req.body;
   console.log("body",req.body);
@@ -66,25 +110,29 @@ app.post('/login', (req, res) => {
     }
   });
 });
+//check login crestentials
 
-app.get('/user', (req, res) => {
-  // Replace 'your_table' with your actual table name
-  console.log("req",req.query);
-  const queryoptions = req.query.usertype!=null?{usertype : req.query.usertype } : true;
-  let query = 'SELECT * FROM Users WHERE ?';
+
+// app.get('/user', (req, res) => {
+//   // Replace 'your_table' with your actual table name
+//   console.log("req",req.query);
+//   const queryoptions = req.query.usertype!=null?{usertype : req.query.usertype } : true;
+//   let query = 'SELECT * FROM Users WHERE ?';
   
-  db.query(query, queryoptions, (error, results) => {
-    if (error) {
-      console.error('Error executing MySQL query:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-      return;
-    }
-    // console.log(results);
-    res.json(results);
+//   db.query(query, queryoptions, (error, results) => {
+//     if (error) {
+//       console.error('Error executing MySQL query:', error);
+//       res.status(500).json({ error: 'Internal Server Error' });
+//       return;
+//     }
+//     // console.log(results);
+//     res.json(results);
     
-  });
-});
+//   });
+// });
 
+
+// Register API
 app.post('/register', (req, res) => {
 
   const requestData = req.body;
@@ -103,6 +151,7 @@ app.post('/register', (req, res) => {
 });
 // Register customer order API
 
+//send customer order details to database
 app.post('/order', (req, res) => {
 
   const requestData = req.body;
@@ -119,6 +168,8 @@ app.post('/order', (req, res) => {
     res.json({ msg: 'order registered' });
   });
 });
+//send customer order details to database
+
 
 // Start the server
 app.listen(port, () => {
